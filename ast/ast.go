@@ -25,6 +25,7 @@ type Program struct {
 	Statements []Statement
 }
 
+// returns the final parsed output
 func (p *Program) String() string {
 	var out bytes.Buffer
 	for _, s := range p.Statements {
@@ -124,7 +125,6 @@ type PrefixExpression struct {
 
 func (pe *PrefixExpression) expressionNode()      {}
 func (pe *PrefixExpression) TokenLiteral() string { return pe.Token.Literal }
-
 func (pe *PrefixExpression) String() string {
 	var out bytes.Buffer
 	out.WriteString("(")
@@ -133,3 +133,31 @@ func (pe *PrefixExpression) String() string {
 	out.WriteString(")")
 	return out.String()
 }
+
+type InfixExpression struct {
+	Token    token.Token // The operator token, e.g. +
+	Left     Expression
+	Operator string
+	Right    Expression
+}
+
+func (oe *InfixExpression) expressionNode()      {}
+func (oe *InfixExpression) TokenLiteral() string { return oe.Token.Literal }
+func (oe *InfixExpression) String() string {
+	var out bytes.Buffer
+	out.WriteString("(")
+	out.WriteString(oe.Left.String())
+	out.WriteString(" " + oe.Operator + " ")
+	out.WriteString(oe.Right.String())
+	out.WriteString(")")
+	return out.String()
+}
+
+type Boolean struct {
+	Token token.Token
+	Value bool
+}
+
+func (b *Boolean) expressionNode()      {}
+func (b *Boolean) TokenLiteral() string { return b.Token.Literal }
+func (b *Boolean) String() string       { return b.Token.Literal }
